@@ -51,10 +51,7 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <button id="convert-btn" class="bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out shadow-md">
-                    Convert
-                </button>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button id="play-btn" class="bg-green-500 text-white font-semibold py-3 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200 ease-in-out shadow-md" disabled>
                     Play Sound
                 </button>
@@ -76,7 +73,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- Elements ---
             const textInput = document.getElementById('text-input');
-            const convertBtn = document.getElementById('convert-btn');
             const playBtn = document.getElementById('play-btn');
             const clearBtn = document.getElementById('clear-btn');
             const morseOutput = document.getElementById('morse-output');
@@ -153,10 +149,9 @@
                 const wordGap = dotDuration * 7;
                 
                 let time = Tone.now();
+                
+                // Disable the play button during playback to prevent overlap
                 playBtn.disabled = true;
-                convertBtn.disabled = true;
-                clearBtn.disabled = true;
-
 
                 for (const symbol of currentMorseCodeString) {
                     if (symbol === '.') {
@@ -172,16 +167,14 @@
                     }
                 }
                 
+                // Re-enable the play button after playback is scheduled to finish
                 Tone.Transport.scheduleOnce(() => {
                     playBtn.disabled = false;
-                    convertBtn.disabled = false;
-                    clearBtn.disabled = false;
                 }, time);
             };
 
             // --- Event Listeners ---
-            convertBtn.addEventListener('click', convertHandler);
-            textInput.addEventListener('input', convertHandler);
+            textInput.addEventListener('input', convertHandler); // Real-time conversion
             clearBtn.addEventListener('click', clearHandler);
             playBtn.addEventListener('click', playSoundHandler);
         });
